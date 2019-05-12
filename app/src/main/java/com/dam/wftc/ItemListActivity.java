@@ -12,10 +12,12 @@ import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.dam.wftc.dummy.DummyContent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,12 +35,41 @@ public class ItemListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
+    private ListView lista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
 
+        final LibreriaBaseDatos libreria = new LibreriaBaseDatos(getApplicationContext());
+
+        ArrayList<Pelicula> lista_peliculas = libreria.recuperarPELICULAS();
+        lista = (ListView) findViewById(R.id.lista_peliculas);
+        lista.setAdapter(new Lista_adaptador(this, R.layout.item_detail datos){
+            @Override
+            public void onEntrada(Object entrada, View view) {
+                if (entrada != null) {
+                    TextView texto_contacto = (TextView) view.findViewById(R.id.textView_contacto);
+                    if (texto_contacto != null)
+                        texto_contacto.setText(((Pelicula) entrada).getNOMBRE());
+
+                    TextView texto_telefono = (TextView) view.findViewById(R.id.textView_telefono);
+                    if (texto_telefono != null)
+                        texto_telefono.setText(((Pelicula) entrada).getTELEFONO());
+
+                    TextView texto_email = (TextView) view.findViewById(R.id.textView_email);
+                    if (texto_email != null)
+                        texto_email.setText(((Pelicula) entrada).getEMAIL());
+
+                    TextView texto_ID = (TextView) view.findViewById(R.id.textView_ID);
+                    if (texto_ID != null)
+                        texto_ID.setText(Integer.toString(((Pelicula) entrada).getID()));
+
+                }
+            }
+        });
+                         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
@@ -73,12 +104,12 @@ public class ItemListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final ItemListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<Pelicula> lista_peliculas;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
+                Pelicula pelicula = (Pelicula) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
