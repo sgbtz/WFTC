@@ -4,17 +4,17 @@ public class Pelicula {
 
     private int movie_id;
     private String title;
-    private String original_title;
+    private String year;
     private String synopsis;
     private String poster_image;
     private double rating;
 
 
 
-    public Pelicula(int id, String tit, String ori_tit, String syn, String img, double rat) {
+    public Pelicula(int id, String tit, String year, String syn, String img, double rat) {
         this.movie_id = id;
         this.title = tit;
-        this.original_title = ori_tit;
+        this.year = year;
         this.synopsis = syn;
         this.poster_image = img;
         this.rating = rat;
@@ -38,11 +38,11 @@ public class Pelicula {
     }
 
 
-    public String getORIGINAL_TITLE() {
-        return original_title;
+    public String getYEAR() {
+        return year;
     }
-    public void setORIGINAL_TITLE(String original_title) {
-        this.original_title = original_title;
+    public void setYEAR(String year) {
+        this.year = year;
     }
 
     public String getSYNOPSIS() {

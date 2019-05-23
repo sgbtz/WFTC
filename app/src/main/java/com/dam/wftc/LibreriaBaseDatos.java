@@ -14,7 +14,7 @@ public class LibreriaBaseDatos extends SQLiteOpenHelper {
     private static final int VERSION_BASEDATOS = 1;
     private static final String title_BASEDATOS = "libreria.db";
     private static final String TABLA_PELICULAS ="CREATE TABLE IF NOT EXISTS peliculas " +
-            " (movie_id INTEGER PRIMARY KEY, title TEXT, original_title TEXT, synopsis TEXT, poster_image TEXT, rating DOUBLE)";
+            " (movie_id INTEGER PRIMARY KEY, title TEXT, year TEXT, synopsis TEXT, poster_image TEXT, rating DOUBLE)";
 
     public LibreriaBaseDatos(Context context) {
         super(context, title_BASEDATOS, null, VERSION_BASEDATOS);
@@ -34,7 +34,7 @@ public class LibreriaBaseDatos extends SQLiteOpenHelper {
 
 
 
-    public boolean insertarPELICULA(int id, String tit, String ori_tit, String syn, String img, double rat) {
+    public boolean insertarPELICULA(int id, String tit, String year, String syn, String img, double rat) {
         long salida=0;
         SQLiteDatabase db = getWritableDatabase();
         if (db != null) {
@@ -42,7 +42,7 @@ public class LibreriaBaseDatos extends SQLiteOpenHelper {
             if(id!=0)
                 valores.put("_id", id);
             valores.put("title", tit);
-            valores.put("original_title", ori_tit);
+            valores.put("year", year);
             valores.put("synopsis", syn);
             valores.put("poster_image", img);
             valores.put("rating", rat);
@@ -52,14 +52,14 @@ public class LibreriaBaseDatos extends SQLiteOpenHelper {
         return(salida>0);
     }
 
-    public boolean  modificarPELICULA(int id, String tit, String ori_tit, String syn, String img, int rat){
+    public boolean  modificarPELICULA(int id, String tit, String year, String syn, String img, int rat){
         long salida=0;
         SQLiteDatabase db = getWritableDatabase();
         if (db != null) {
             ContentValues valores = new ContentValues();
             valores.put("_id", id);
             valores.put("title", tit);
-            valores.put("original_title", ori_tit);
+            valores.put("year", year);
             valores.put("synopsis", syn);
             valores.put("poster_image", img);
             valores.put("rating", rat);
@@ -90,7 +90,7 @@ public class LibreriaBaseDatos extends SQLiteOpenHelper {
 
     public Pelicula recuperarPELICULA(int id) {
         SQLiteDatabase db = getReadableDatabase();
-        String[] valores_recuperar = {"movie_id", "title" , "original_title" , "synopsis" , "poster_image" , "rating" };
+        String[] valores_recuperar = {"movie_id", "title" , "year" , "synopsis" , "poster_image" , "rating" };
         Cursor c = db.query("peliculas", valores_recuperar, "_id=" + id, null, null, null, null, null);
         if(c != null) {
             c.moveToFirst();
@@ -106,7 +106,7 @@ public class LibreriaBaseDatos extends SQLiteOpenHelper {
     public ArrayList<Pelicula> recuperarPELICULAS() {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Pelicula> lista_peliculas = new ArrayList<Pelicula>();
-        String[] valores_recuperar = {"movie_id", "title" , "original_title" , "synopsis" , "poster_image" , "rating" };
+        String[] valores_recuperar = {"movie_id", "title" , "year" , "synopsis" , "poster_image" , "rating" };
         Cursor c = db.query("peliculas", valores_recuperar, null, null, null, null, null, null);
         c.moveToFirst();
         if (c.getCount() > 0) {
