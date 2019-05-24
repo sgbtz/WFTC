@@ -1,23 +1,19 @@
 package com.dam.wftc;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * An activity representing a list of Items. This activity
@@ -29,41 +25,74 @@ import java.util.List;
  */
 public class ListaActivity extends AppCompatActivity {
 
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private boolean mTwoPane;
+    private TMDB tmdb;
     private ListView lista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_item_list);
+        setContentView(R.layout.libreria_list);
+
+        tmdb = new TMDB();
 
         final LibreriaBaseDatos libreria = new LibreriaBaseDatos(getApplicationContext());
 
         ArrayList<Pelicula> lista_peliculas = libreria.recuperarPELICULAS();
-        lista = (ListView) findViewById(R.id.lista_peliculas);
+        lista = findViewById(R.id.ListView_lista_peliculas);
         lista.setAdapter(new Lista_adaptador(this, R.layout.pelicula, lista_peliculas) {
             @Override
             public void onEntrada(Object entrada, View view) {
                 if (entrada != null) {
-                    TextView texto_contacto = (TextView) view.findViewById(R.id.textView_titulo);
+                    TextView texto_contacto = view.findViewById(R.id.textView_titulo);
                     if (texto_contacto != null)
                         texto_contacto.setText(((Pelicula) entrada).getTITLE());
 
-                    TextView texto_telefono = (TextView) view.findViewById(R.id.textView_año);
+                    TextView texto_telefono = view.findViewById(R.id.textView_año);
                     if (texto_telefono != null)
                         texto_telefono.setText(((Pelicula) entrada).getYEAR());
 
+                    String imgURL = tmdb.getSecureBasePath() + "original" + ((Pelicula) entrada).getIMAGE();
 
-                    TextView texto_ID = (TextView) view.findViewById(R.id.textView_ID);
+                    new DownloadImage((ImageView) view.findViewById(R.id.imageView_poster))
+                            .execute(imgURL);
+
+
+
+                    final TextView texto_ID = view.findViewById(R.id.textView_ID);
                     if (texto_ID != null)
                         texto_ID.setText(Integer.toString(((Pelicula) entrada).getID()));
+
+                    ToggleButton toggle = view.findViewById(R.id.toggleButton_añadir_pelicula);
+
+                    if (libreria.recuperarPELICULA(((Pelicula) entrada).getID()) != null)
+                        toggle.setChecked(true);
+
+                    final Pelicula pelicula =  (Pelicula) entrada;
+
+                    toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                // Añadir película
+                                String id = texto_ID.getText().toString();
+                                Log.d("sebas",id);
+                                libreria.insertarPELICULA(pelicula);
+                            } else {
+                                // Quitar película
+                                String id = texto_ID.getText().toString();
+                                Log.d("sebas",id);
+                                libreria.borrarPELICULA(pelicula.getID());
+                            }
+                        }
+                    });
 
                 }
             }
         });
+
+    }
+
+    public void irBuscarPeliculas(View view) {
+        Intent intent = new Intent(this, BuscarPeliculasActivity.class);
+        startActivity(intent);
     }
 }

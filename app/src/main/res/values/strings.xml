@@ -1,6 +1,12 @@
 <resources>
-    <string name="app_name">Waiting For The Credits</string>
+    <string name="app_name">WFTC</string>
     <string name="title_item_detail">Item Detail</string>
+    <string name="libreria_header">Tu librería</string>
+    <string name="buscador_header">Busca un título</string>
     <string name="titulo">Título</string>
     <string name="año">Año</string>
+    <string name="poster_descripcion">Póster de la película</string>
+    <string name="buscar">Buscar</string>
+    <string name="añadir_pelicula">Añadir a librería</string>
+    <string name="quitar_pelicula">Quitar de librería</string>
 </resources>
