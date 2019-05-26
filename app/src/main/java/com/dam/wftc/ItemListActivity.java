@@ -90,7 +90,7 @@ public class ItemListActivity extends AppCompatActivity {
                 FilmContent.Pelicula item = (FilmContent.Pelicula) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.getID());
+                    arguments.putInt(ItemDetailFragment.ARG_ITEM_ID, item.getID());
                     ItemDetailFragment fragment = new ItemDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
