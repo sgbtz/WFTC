@@ -8,16 +8,18 @@ public class Pelicula {
     private String synopsis;
     private String poster_image;
     private double rating;
+    private boolean añadida;
 
 
 
-    public Pelicula(int id, String tit, String year, String syn, String img, double rat) {
+    public Pelicula(int id, String tit, String year, String syn, String img, double rat, boolean añadida) {
         this.movie_id = id;
         this.title = tit;
         this.year = year;
         this.synopsis = syn;
         this.poster_image = img;
         this.rating = rat;
+        this.añadida = añadida;
     }
 
 
@@ -65,4 +67,7 @@ public class Pelicula {
     public void setRATING(double rating) {
         this.rating = rating;
     }
+
+    public boolean getAñadida() { return añadida; }
+    public void setAñadida(boolean añadida) { this.añadida = añadida; }
 }

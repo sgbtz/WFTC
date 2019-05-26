@@ -25,7 +25,7 @@ public class TMDB {
     // API Key del servicio REST a utilizar
     private static final String API_KEY = "cd18a95d7192914edb30756f544a6f6c";
     // path para las imagenes
-    private String secureBasePath;
+    private String secureBasePath = "https://image.tmdb.org/t/p/";
 
     public TMDB() {
         String url = tmdbConfURL + "?api_key=" + API_KEY;

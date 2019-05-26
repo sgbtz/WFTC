@@ -3,6 +3,8 @@ package com.dam.wftc;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -25,8 +27,10 @@ import java.util.ArrayList;
  */
 public class ListaActivity extends AppCompatActivity {
 
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+
     private TMDB tmdb;
-    private ListView lista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,56 +42,15 @@ public class ListaActivity extends AppCompatActivity {
         final LibreriaBaseDatos libreria = new LibreriaBaseDatos(getApplicationContext());
 
         ArrayList<Pelicula> lista_peliculas = libreria.recuperarPELICULAS();
-        lista = findViewById(R.id.ListView_lista_peliculas);
-        lista.setAdapter(new Lista_adaptador(this, R.layout.pelicula, lista_peliculas) {
-            @Override
-            public void onEntrada(Object entrada, View view) {
-                if (entrada != null) {
-                    TextView texto_contacto = view.findViewById(R.id.textView_titulo);
-                    if (texto_contacto != null)
-                        texto_contacto.setText(((Pelicula) entrada).getTITLE());
 
-                    TextView texto_telefono = view.findViewById(R.id.textView_año);
-                    if (texto_telefono != null)
-                        texto_telefono.setText(((Pelicula) entrada).getYEAR());
+        recyclerView = findViewById(R.id.RecyclerView_lista_peliculas);
+        recyclerView.setHasFixedSize(true);
 
-                    String imgURL = tmdb.getSecureBasePath() + "original" + ((Pelicula) entrada).getIMAGE();
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
 
-                    new DownloadImage((ImageView) view.findViewById(R.id.imageView_poster))
-                            .execute(imgURL);
-
-
-
-                    final TextView texto_ID = view.findViewById(R.id.textView_ID);
-                    if (texto_ID != null)
-                        texto_ID.setText(Integer.toString(((Pelicula) entrada).getID()));
-
-                    ToggleButton toggle = view.findViewById(R.id.toggleButton_añadir_pelicula);
-
-                    if (libreria.recuperarPELICULA(((Pelicula) entrada).getID()) != null)
-                        toggle.setChecked(true);
-
-                    final Pelicula pelicula =  (Pelicula) entrada;
-
-                    toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked) {
-                                // Añadir película
-                                String id = texto_ID.getText().toString();
-                                Log.d("sebas",id);
-                                libreria.insertarPELICULA(pelicula);
-                            } else {
-                                // Quitar película
-                                String id = texto_ID.getText().toString();
-                                Log.d("sebas",id);
-                                libreria.borrarPELICULA(pelicula.getID());
-                            }
-                        }
-                    });
-
-                }
-            }
-        });
+        ListaAdaptador listaAdaptador = new ListaAdaptador(lista_peliculas, tmdb, libreria);
+        recyclerView.setAdapter(listaAdaptador);
 
     }
 

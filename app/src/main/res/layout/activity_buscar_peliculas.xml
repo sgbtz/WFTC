@@ -43,11 +43,11 @@
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/ListView_lista_resultados"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/RecyclerView_lista_resultados"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

@@ -32,12 +32,12 @@
             android:text="@string/libreria_header"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-        <ListView
-            android:id="@+id/ListView_lista_peliculas"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/RecyclerView_lista_peliculas"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-        </ListView>
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 
 </RelativeLayout>

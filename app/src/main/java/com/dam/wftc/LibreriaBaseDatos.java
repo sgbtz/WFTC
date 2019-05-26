@@ -102,7 +102,7 @@ public class LibreriaBaseDatos extends SQLiteOpenHelper {
         c.moveToFirst();
         if (c.getCount() > 0)
             pelicula = new Pelicula(c.getInt(0), c.getString(1), c.getString(2), c.getString(3),
-                    c.getString(4), c.getDouble(5));
+                    c.getString(4), c.getDouble(5), true);
 
         db.close();
         c.close();
@@ -119,7 +119,7 @@ public class LibreriaBaseDatos extends SQLiteOpenHelper {
         if (c.getCount() > 0) {
             do {
                 Pelicula pelicula = new Pelicula(c.getInt(0), c.getString(1), c.getString(2), c.getString(3),
-                        c.getString(4), c.getDouble(5));
+                        c.getString(4), c.getDouble(5), true);
                 lista_peliculas.add(pelicula);
             } while (c.moveToNext());
         }

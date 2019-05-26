@@ -2,12 +2,13 @@ package com.dam.wftc;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -27,10 +28,12 @@ import java.util.ArrayList;
 
 public class BuscarPeliculasActivity extends AppCompatActivity {
 
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
 
-    private LibreriaBaseDatos libBD;
 
-    private ListView lista;
+    private LibreriaBaseDatos libreria;
+
     private TMDB tmdb;
     private EditText titulo;
 
@@ -39,8 +42,13 @@ public class BuscarPeliculasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buscar_peliculas);
 
-        libBD = new LibreriaBaseDatos(getApplicationContext());
-        lista = findViewById(R.id.ListView_lista_resultados);
+        recyclerView = (RecyclerView) findViewById(R.id.RecyclerView_lista_resultados);
+        recyclerView.setHasFixedSize(true);
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        libreria = new LibreriaBaseDatos(getApplicationContext());
         tmdb = new TMDB();
 
     }
@@ -66,9 +74,13 @@ public class BuscarPeliculasActivity extends AppCompatActivity {
                                     for (int i=0 ; i<results.length() ; i++){
 
                                         JSONObject peli = results.getJSONObject(i);
-                                        lista_peliculas.add(new Pelicula(peli.getInt("id"), peli.getString("title"),
+                                        Pelicula pelicula = new Pelicula(peli.getInt("id"), peli.getString("title"),
                                                 peli.getString("release_date"), peli.getString("overview"),
-                                                peli.getString("poster_path"), peli.getDouble("vote_average")));
+                                                peli.getString("poster_path"), peli.getDouble("vote_average"), false);
+                                        if (libreria.recuperarPELICULA(pelicula.getID()) != null)
+                                            pelicula.setAñadida(true);
+
+                                        lista_peliculas.add(pelicula);
                                     }
                                 }
 
@@ -95,49 +107,7 @@ public class BuscarPeliculasActivity extends AppCompatActivity {
 
     public void mostrarPeliculas(ArrayList<Pelicula> peliculas) {
 
-            lista.setAdapter(new Lista_adaptador(this, R.layout.pelicula, peliculas) {
-                @Override
-                public void onEntrada(Object entrada, View view) {
-                    if (entrada != null) {
-                        TextView texto_contacto = view.findViewById(R.id.textView_titulo);
-                        if (texto_contacto != null)
-                            texto_contacto.setText(((Pelicula) entrada).getTITLE());
-
-                        TextView texto_telefono = view.findViewById(R.id.textView_año);
-                        if (texto_telefono != null)
-                            texto_telefono.setText(((Pelicula) entrada).getYEAR());
-
-                        String imgURL = tmdb.getSecureBasePath() + "original" + ((Pelicula) entrada).getIMAGE();
-
-                        new DownloadImage((ImageView) view.findViewById(R.id.imageView_poster))
-                                .execute(imgURL);
-
-
-                        final TextView texto_ID = view.findViewById(R.id.textView_ID);
-                        if (texto_ID != null)
-                            texto_ID.setText(Integer.toString(((Pelicula) entrada).getID()));
-
-                        ToggleButton toggle = view.findViewById(R.id.toggleButton_añadir_pelicula);
-
-                        if (libBD.recuperarPELICULA(((Pelicula) entrada).getID()) != null)
-                            toggle.setChecked(true);
-
-                        final Pelicula pelicula =  (Pelicula) entrada;
-
-                        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                if (isChecked) {
-                                    // Quitar película
-                                    String id = texto_ID.getText().toString();
-                                    Log.d("sebas",id);
-                                    libBD.insertarPELICULA(pelicula);
-                                } else {
-                                    // Añadir película
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        }
+            ListaAdaptador listaAdaptador = new ListaAdaptador(peliculas, tmdb, libreria);
+            recyclerView.setAdapter(listaAdaptador);
+    }
 }
