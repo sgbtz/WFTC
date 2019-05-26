@@ -9,4 +9,7 @@
     <string name="buscar">Buscar</string>
     <string name="añadir_pelicula">Añadir a librería</string>
     <string name="quitar_pelicula">Quitar de librería</string>
+    <string name="descubre">Descubre</string>
+    <string name="instrucciones">Agita el móvil hacia abajo para guardar en librería.
+        Agita hacia los lados para descartar.</string>
 </resources>

@@ -22,6 +22,8 @@ public class TMDB {
     private static final String filmDetailsURL = "https://api.themoviedb.org/3/movie/";
     // URL para obtener la configuración de TMDB
     private static final String tmdbConfURL = "https://api.themoviedb.org/3/configuration";
+    // URL para descubrir peliculas
+    private static final String discoverURL = "https://api.themoviedb.org/3/discover/movie";
     // API Key del servicio REST a utilizar
     private static final String API_KEY = "cd18a95d7192914edb30756f544a6f6c";
     // path para las imagenes
@@ -53,6 +55,8 @@ public class TMDB {
     }
 
     public static String getSearchURL() { return searchURL; }
+
+    public static String getDiscoverURL() { return discoverURL; }
 
     public static String getApiKey() { return API_KEY; }
 

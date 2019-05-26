@@ -29,8 +29,11 @@ public class ListaActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
+    ListaAdaptador listaAdaptador;
 
     private TMDB tmdb;
+    LibreriaBaseDatos libreria;
+    ArrayList<Pelicula> lista_peliculas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +42,9 @@ public class ListaActivity extends AppCompatActivity {
 
         tmdb = new TMDB();
 
-        final LibreriaBaseDatos libreria = new LibreriaBaseDatos(getApplicationContext());
+        libreria = new LibreriaBaseDatos(getApplicationContext());
 
-        ArrayList<Pelicula> lista_peliculas = libreria.recuperarPELICULAS();
+        lista_peliculas = libreria.recuperarPELICULAS();
 
         recyclerView = findViewById(R.id.RecyclerView_lista_peliculas);
         recyclerView.setHasFixedSize(true);
@@ -49,9 +52,22 @@ public class ListaActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        ListaAdaptador listaAdaptador = new ListaAdaptador(lista_peliculas, tmdb, libreria);
+        listaAdaptador = new ListaAdaptador(lista_peliculas, tmdb, libreria);
         recyclerView.setAdapter(listaAdaptador);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        lista_peliculas = libreria.recuperarPELICULAS();
+        listaAdaptador = new ListaAdaptador(lista_peliculas, tmdb, libreria);
+        recyclerView.swapAdapter(listaAdaptador, false);
+    }
+
+    public void irDescubrir(View view) {
+        Intent intent = new Intent(this, DescubreActivity.class);
+        startActivity(intent);
     }
 
     public void irBuscarPeliculas(View view) {
